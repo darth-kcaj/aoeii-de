@@ -11,3 +11,6 @@ https://eso-community.net/viewtopic.php?p=436182
 https://steamcommunity.com/sharedfiles/filedetails/?id=1913776309
 
 
+This is where you can find the game resources locally
+
+C:\SteamLibrary\steamapps\common\AoE2DE\resources\_common\xs
