@@ -25,3 +25,24 @@ void p2chatEconScore()
     int score = EconScore(2);
     xsChatData("Player 2 Economy score: %d" , score);
 }
+
+void chatHighestScore()
+{
+    int highscorePlayer = 0;
+    int highscore = 0;
+    
+    //iterate over all the players, find the highest score
+    for( i = 1; < 9 ) {
+        
+        int currScore = EconScore(i);
+
+        if(currScore > highscore) {
+            highscore = currScore;
+            highscorePlayer = i;
+        }
+
+    }
+
+    xsChatData("Player %d Has highest Score", highscorePlayer);
+    xsChatData("Score: %d", highscore);
+}
