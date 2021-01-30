@@ -36,7 +36,7 @@ void chatHighestScore()
         
         int currScore = EconScore(i);
 
-        if(currScore > highscore) {
+        if(currScore > highscore) { // 'if the score of the current player is greater than the highest score so far'
             highscore = currScore;
             highscorePlayer = i;
         }
