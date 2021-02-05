@@ -11,7 +11,7 @@
 ; ...
 ; )
 
-
+(defconst make-dock-flag 1) 
 
 ; Housing
 
@@ -138,11 +138,27 @@
 )
 
 (defrule
-(current-age == feudal-age)
-(can-train villager)
-(civilian-population < 20)
+        (current-age == feudal-age)
+        (can-train villager)
+        (civilian-population < 20)
 =>
-(train villager)
+        (train villager)
+)
+(defrule
+        (current-age != dark-age)
+        (can-build dock)
+        (goal make-dock-flag 1)
+               
+=>
+        (build dock)
+        (set-goal make-dock-flag 1)
+)
+
+(defrule
+        (can-build fishing-ship)
+        (unit-type-count fishing-ship < 15)
+        =>
+        (train fishing-ship)
 )
 
 (defrule
@@ -309,6 +325,24 @@
 (civilian-population < 150)
 =>
 (train villager)
+)
+
+(defrule
+        (current-age == imperial-age)
+        =>
+        (set-escrow-percentage wood 20)
+        (set-escrow-percentage gold 20)
+        (set-escrow-percentage stone 20)
+        (set-escrow-percentage food 20)
+        (disable-self)
+)
+
+(defrule
+        (current-age == imperial-age)
+        (can-build town-center)
+        =>
+        (build town-center)
+        (disable-self)
 )
 
 (defrule
