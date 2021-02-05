@@ -14,3 +14,9 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=1913776309
 This is where you can find the game resources locally
 
 C:\SteamLibrary\steamapps\common\AoE2DE\resources\_common\xs
+
+
+**HOW TO INSTALL AI**
+Copy the files in the 'ai' folder in this repo to the AI folder to your AOE II DE steam folder:
+
+D:\SteamLibrary\steamapps\common\AoE2DE\resources\_common\ai
