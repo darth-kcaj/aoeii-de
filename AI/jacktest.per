@@ -36,15 +36,15 @@
         (disable-self)
 )
 (defrule
-        (can-research ri-bone-saw)
+        (can-research ri-bow-saw)
         =>
-        (research ri-two-man-saw)
+        (research ri-bow-saw)
         (disable-self)
 )
 (defrule
-        (can-research ri-double-bit-axe)
+        (can-research ri-two-man-saw)
         =>
-        (research ri-double-bit-axe)
+        (research ri-two-man-saw)
         (disable-self)
 )
 (defrule
@@ -138,9 +138,9 @@
 )
 (defrule
         (goal infantry-upgrades-flag 1)
-        (can-research ri-iron-casing)
+        (can-research ri-iron-casting)
         =>
-        (research ri-iron-casing)
+        (research ri-iron-casting)
         (disable-self)
 )
 (defrule
@@ -573,7 +573,7 @@
 (defrule
         (true)
         =>
-        (goal infantry-upgrades-flag 1)
+        (set-goal infantry-upgrades-flag 1)
         (disable-self)
 )
 
