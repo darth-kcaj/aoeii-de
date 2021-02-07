@@ -599,11 +599,13 @@
         (can-research my-unique-unit-upgrade)
         =>
         (research my-unique-unit-upgrade)
+        (disable-self)
 )
 
 (defrule
         (unit-type-count-total my-unique-unit-line < 150)
         (can-train my-unique-unit-line)
+        (research-completed my-unique-unit-upgrade)
         =>
         (train my-unique-unit-line)
 )
