@@ -11,7 +11,8 @@
 ; ...
 ; )
 
-(defconst make-dock-flag 1) 
+(defconst infantry-upgrades-flag 1) 
+(defconst tower-upgrades-flag 1) 
 
 ; Housing
 
@@ -22,6 +23,153 @@
 (population-headroom > 2) ;the difference between the current population and the population limit
 =>
 (build house)
+)
+
+
+
+; ESSENCIAL RESEARCH
+
+(defrule
+        (can-research ri-double-bit-axe)
+        =>
+        (research ri-double-bit-axe)
+        (disable-self)
+)
+(defrule
+        (can-research ri-bone-saw)
+        =>
+        (research ri-two-man-saw)
+        (disable-self)
+)
+(defrule
+        (can-research ri-double-bit-axe)
+        =>
+        (research ri-double-bit-axe)
+        (disable-self)
+)
+(defrule
+        (can-research ri-heavy-plow)
+        =>
+        (research ri-heavy-plow)
+        (disable-self)
+)
+
+(defrule
+      
+        (can-research ri-horse-collar)
+        =>
+        (research ri-horse-collar)
+        (disable-self)
+)
+
+
+
+(defrule
+        (can-research ri-crop-rotation)
+        =>
+        (research ri-crop-rotation)
+        (disable-self)
+)
+(defrule
+        (can-research ri-gold-mining)
+        =>
+        (research ri-gold-mining)
+        (disable-self)
+)
+(defrule
+        (can-research ri-stone-mining)
+        (current-age != feudal-age)
+        =>
+        (research ri-stone-mining)
+        (disable-self)
+)
+(defrule
+        (can-research ri-stone-shaft-mining)
+        =>
+        (research ri-stone-shaft-mining)
+        (disable-self)
+)
+(defrule
+        (can-research ri-gold-shaft-mining)
+        (current-age != castle-age)
+        =>
+        (research ri-gold-shaft-mining)
+        (disable-self)
+)
+(defrule
+        (can-research ri-loom)
+        =>
+        (research ri-loom)
+        (disable-self)
+)
+(defrule
+      
+        (can-research ri-wheel-barrow)
+        (civilian-population > 30)
+        =>
+        (research ri-wheel-barrow)
+        (disable-self)
+)
+(defrule
+      
+        (can-research ri-hand-cart)
+        (civilian-population > 40)
+        =>
+        (research ri-hand-cart)
+        (disable-self)
+)
+(defrule
+      
+        (can-research ri-conscription)
+        
+        =>
+        (research ri-conscription)
+        (disable-self)
+)
+
+; unit-line upgrades
+
+(defrule
+        (goal infantry-upgrades-flag 1)
+        (can-research ri-forging)
+        =>
+        (research ri-forging)
+        (disable-self)
+)
+(defrule
+        (goal infantry-upgrades-flag 1)
+        (can-research ri-iron-casing)
+        =>
+        (research ri-iron-casing)
+        (disable-self)
+)
+(defrule
+        (goal infantry-upgrades-flag 1)
+        (can-research ri-blast-furnace)
+        =>
+        (research ri-blast-furnace)
+        (disable-self)
+)
+(defrule
+        (goal infantry-upgrades-flag 1)
+        (can-research ri-scale-mail)
+        =>
+        (research ri-scale-mail)
+        (disable-self)
+)
+(defrule
+        (goal infantry-upgrades-flag 1)
+        (can-research ri-chain-mail)
+        =>
+        (research ri-chain-mail)
+        (disable-self)
+)
+(defrule
+        (goal infantry-upgrades-flag 1)
+        (can-research ri-plate-mail)
+        =>
+        (research ri-plate-mail)
+        (disable-self)
 )
 
 ;DARK AGE......
@@ -43,6 +191,7 @@
 (can-build mill)
 =>
 (build mill)
+
 )
 
 (defrule
@@ -79,7 +228,8 @@
 (can-research feudal-age)
 =>
 (research feudal-age)
-(chat-to-all "Feudal Age, here we come!")
+(chat-to-allies "Feudal Age, here we come!")
+(disable-self)
 )
 
 
@@ -94,7 +244,7 @@
         (set-strategic-number sn-food-gatherer-percentage 80)
         (set-strategic-number sn-gold-gatherer-percentage 10)
         (set-strategic-number sn-stone-gatherer-percentage 0)
-        (chat-to-all "Prioritizing food and gold")
+        (chat-to-allies "Prioritizing food and gold")
 )
 
 (defrule
@@ -106,7 +256,7 @@
         (set-strategic-number sn-food-gatherer-percentage 55)
         (set-strategic-number sn-gold-gatherer-percentage 0)
         (set-strategic-number sn-stone-gatherer-percentage 0)
-        (chat-to-all "Prioritizing food and wood")
+        (chat-to-allies "Prioritizing food and wood")
 )
 
 
@@ -120,9 +270,34 @@
         (set-strategic-number sn-food-gatherer-percentage 50)
         (set-strategic-number sn-gold-gatherer-percentage 40)
         (set-strategic-number sn-stone-gatherer-percentage 0)
-        (chat-to-all "Setting feudal age phase 1 economy stats")
+        (chat-to-allies "Setting feudal age phase 1 economy stats")
         (disable-self)
 )
+
+(defrule
+        (current-age == feudal-age)
+        (building-type-count-total barracks == 0)
+        (can-build barracks)
+
+=>
+        (build barracks)
+        (disable-self)
+)
+
+(defrule
+        (current-age == feudal-age)
+        (building-type-count-total barracks == 1)
+        (unit-type-count-total spearman-line < 10)
+        (can-train spearman-line)
+
+=>
+        (train spearman-line)
+       
+)
+
+
+
+
 
 (defrule
         (current-age == feudal-age)
@@ -133,7 +308,7 @@
         (set-strategic-number sn-food-gatherer-percentage 50)
         (set-strategic-number sn-gold-gatherer-percentage 10)
         (set-strategic-number sn-stone-gatherer-percentage 0)
-        (chat-to-all "Setting feudal age phase 2 deconomy stats")
+        (chat-to-allies "Setting feudal age phase 2 deconomy stats")
         (disable-self)
 )
 
@@ -147,16 +322,19 @@
 (defrule
         (current-age != dark-age)
         (can-build dock)
-        (goal make-dock-flag 1)
+        ; (goal make-dock-flag 1)
                
 =>
         (build dock)
-        (set-goal make-dock-flag 1)
+        ; (set-goal make-dock-flag 1)
+        (disable-self)
 )
 
 (defrule
         (can-build fishing-ship)
         (unit-type-count fishing-ship < 15)
+        (building-type-count-total blacksmith != 0)
+        (building-type-count-total market != 0)
         =>
         (train fishing-ship)
 )
@@ -192,11 +370,12 @@
 (can-research castle-age)
 =>
 (research castle-age)
-(chat-to-all "YE BOI, here we come!")
+(chat-to-allies "YE BOI, here we come!")
 )
 
 
 ; CASTLE AGE
+
 
 (defrule
 (current-age == castle-age)
@@ -225,7 +404,7 @@
         (set-strategic-number sn-food-gatherer-percentage 0)
         (set-strategic-number sn-gold-gatherer-percentage 0)
         (set-strategic-number sn-stone-gatherer-percentage 100)
-        (chat-to-all "Setting castle age stone rush")
+        (chat-to-allies "Setting castle age stone rush")
         (disable-self)
 )
 (defrule
@@ -233,11 +412,11 @@
         (current-age == castle-age)
         (building-type-count-total castle > 0)
 =>
-        (set-strategic-number sn-wood-gatherer-percentage 30)
-        (set-strategic-number sn-food-gatherer-percentage 30)
+        (set-strategic-number sn-wood-gatherer-percentage 20)
+        (set-strategic-number sn-food-gatherer-percentage 40)
         (set-strategic-number sn-gold-gatherer-percentage 30)
         (set-strategic-number sn-stone-gatherer-percentage 10)
-        (chat-to-all "Setting castle age normal")
+        (chat-to-allies "Setting castle age normal")
         (disable-self)
 )
 
@@ -248,7 +427,7 @@
 (can-build castle)
 =>
 (build castle)
-(chat-to-all "Building CAstle")
+(chat-to-allies "Building CAstle")
 (disable-self)
 )
 
@@ -265,7 +444,7 @@
 
 (defrule
 (current-age == imperial-age)
-(building-type-count-total farm < 15)
+(building-type-count-total farm < 30)
 (can-build farm)
 (idle-farm-count == 0) ; Only build farms if there are less than 4 idle farms
 =>
@@ -277,7 +456,7 @@
 (can-research imperial-age)
 =>
 (research imperial-age)
-(chat-to-all "YE BOI, here we come!")
+(chat-to-allies "YE BOI, here we come!")
 )
 
 (defrule
@@ -327,15 +506,15 @@
 (train villager)
 )
 
-(defrule
-        (current-age == imperial-age)
-        =>
-        (set-escrow-percentage wood 20)
-        (set-escrow-percentage gold 20)
-        (set-escrow-percentage stone 20)
-        (set-escrow-percentage food 20)
-        (disable-self)
-)
+; (defrule
+;         (current-age == imperial-age)
+;         =>
+;         (set-escrow-percentage wood 20)
+;         (set-escrow-percentage gold 20)
+;         (set-escrow-percentage stone 20)
+;         (set-escrow-percentage food 20)
+;         (disable-self)
+; )
 
 (defrule
         (current-age == imperial-age)
@@ -367,6 +546,20 @@
 (set-strategic-number sn-gold-dropsite-distance 5)
 (set-strategic-number sn-maximum-food-drop-distance 6) 
 (set-strategic-number sn-maximum-hunt-drop-distance  6) 
+
+)
+
+(defrule
+        (true)
+        =>
+        ; (set-strategic-number sn-task-ungrouped-soldiers  1) 
+        (set-strategic-number sn-number-attack-groups 1) 
+        (set-strategic-number sn-minimum-attack-group-size 10)
+        (set-strategic-number sn-maximum-attack-group-size 10)
+        (set-strategic-number sn-percent-attack-soldiers 100)
+        (set-strategic-number sn-scale-minimum-attack-group-size 0)
+        (set-strategic-number sn-scale-maximum-attack-group-size 0)
+        (disable-self)
 )
 
 
@@ -375,3 +568,44 @@
 ; CHEESE STRATS
 ; =======================================
 
+#load-if-defined MALAY-CIV
+
+(defrule
+        (true)
+        =>
+        (goal infantry-upgrades-flag 1)
+        (disable-self)
+)
+
+(defrule
+        (can-build castle)
+        (building-type-count-total castle < 2)
+        =>
+        (build castle)
+)
+
+(defrule
+        (can-research my-unique-unit-upgrade)
+        =>
+        (research my-unique-unit-upgrade)
+)
+
+(defrule
+        (unit-type-count-total my-unique-unit-line < 150)
+        (can-train my-unique-unit-line)
+        =>
+        (train my-unique-unit-line)
+)
+
+(defrule
+        (current-age == imperial-age)
+        =>
+        ; (set-strategic-number sn-task-ungrouped-soldiers  1) 
+        (set-strategic-number sn-number-attack-groups 1) 
+        (set-strategic-number sn-minimum-attack-group-size 75 )
+        (set-strategic-number sn-maximum-attack-group-size 75 )
+        (disable-self)
+)
+
+
+#end-if
