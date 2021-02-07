@@ -213,15 +213,7 @@
 (disable-self)
 )
 
-(defrule
-(current-age <= feudal-age)
-(building-type-count-total lumber-camp > 0) ; We want a lumber camp before farms
-(unit-type-count-total villager > 14)
-(building-type-count-total farm < 15)
-(idle-farm-count == 0) ; Only build farms if there are less than 4 idle farms
-=>
-(build farm)
-)
+
 
 (defrule
 (current-age == dark-age)
@@ -261,6 +253,16 @@
 
 
 ; FEUDAL AGE
+
+(defrule
+(current-age == feudal-age)
+(building-type-count-total lumber-camp > 0) ; We want a lumber camp before farms
+(unit-type-count-total villager > 14)
+(building-type-count-total farm < 15)
+(idle-farm-count == 0) ; Only build farms if there are less than 4 idle farms
+=>
+(build farm)
+)
 
 (defrule
         (current-age == feudal-age)
@@ -443,7 +445,7 @@
 
 
 (defrule
-(current-age == imperial-age)
+(current-age == castle-age)
 (building-type-count-total farm < 30)
 (can-build farm)
 (idle-farm-count == 0) ; Only build farms if there are less than 4 idle farms
@@ -488,7 +490,7 @@
 
 
 (defrule
-(current-age >= imperial-age)
+(current-age == imperial-age)
 (dropsite-min-distance food greater-than 5)
 (building-type-count-total farm != 0)
 (can-build mill)
@@ -497,6 +499,14 @@
 )
 
 ; IMPERIAL AGE
+
+(defrule
+(current-age == imperial-age)
+(can-build farm)
+(idle-farm-count == 0) ; Only build farms if there are less than 4 idle farms
+=>
+(build farm)
+)
 
 (defrule
 (current-age == imperial-age)
@@ -546,6 +556,7 @@
 (set-strategic-number sn-gold-dropsite-distance 5)
 (set-strategic-number sn-maximum-food-drop-distance 6) 
 (set-strategic-number sn-maximum-hunt-drop-distance  6) 
+(disable-self)
 
 )
 
