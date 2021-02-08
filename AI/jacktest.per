@@ -18,9 +18,9 @@
 
 (defrule
 (can-build house)
-(housing-headroom < 2)    ;the difference between the current population and supportable population (not the
+(housing-headroom < 3)    ;the difference between the current population and supportable population (not the
                           ;amount of population houses support)
-(population-headroom > 2) ;the difference between the current population and the population limit
+(population-headroom > 3) ;the difference between the current population and the population limit
 =>
 (build house)
 )
@@ -382,7 +382,7 @@
 (defrule
 (current-age == castle-age)
 (can-train villager)
-(civilian-population < 30)
+(civilian-population < 50)
 =>
 (train villager)
 )
@@ -402,10 +402,10 @@
         (current-age == castle-age)
         (building-type-count-total castle == 0)
 =>
-        (set-strategic-number sn-wood-gatherer-percentage 0)
+        (set-strategic-number sn-wood-gatherer-percentage 5)
         (set-strategic-number sn-food-gatherer-percentage 0)
         (set-strategic-number sn-gold-gatherer-percentage 0)
-        (set-strategic-number sn-stone-gatherer-percentage 100)
+        (set-strategic-number sn-stone-gatherer-percentage 95)
         (chat-to-allies "Setting castle age stone rush")
         (disable-self)
 )
@@ -462,7 +462,8 @@
 )
 
 (defrule
-(current-age >= imperial-age)
+(current-age != dark-age)
+(current-age != feudal-age)
 (dropsite-min-distance wood greater-than 3)
 (can-build lumber-camp)
 =>
@@ -470,7 +471,8 @@
 )
 
 (defrule
-(current-age >= imperial-age)
+(current-age != dark-age)
+(current-age != feudal-age)
 (dropsite-min-distance stone greater-than 5)
 (building-type-count-total mining-camp < 10)
 (dropsite-min-distance stone != -1) ; no stone left on map
@@ -478,8 +480,10 @@
 =>
 (build mining-camp)
 )
+
 (defrule
-(current-age >= imperial-age)
+(current-age != dark-age)
+(current-age != feudal-age)
 (dropsite-min-distance gold greater-than 5)
 (building-type-count-total mining-camp < 10)
 (dropsite-min-distance gold != -1) ; no gold left on map
@@ -489,6 +493,16 @@
 )
 
 
+
+(defrule
+        (can-build town-center)
+        =>
+        (build town-center)
+        (disable-self)
+)
+
+; IMPERIAL AGE
+
 (defrule
 (current-age == imperial-age)
 (dropsite-min-distance food greater-than 5)
@@ -497,8 +511,6 @@
 =>
 (build mill)
 )
-
-; IMPERIAL AGE
 
 (defrule
 (current-age == imperial-age)
@@ -510,10 +522,38 @@
 
 (defrule
 (current-age == imperial-age)
+(dropsite-min-distance stone greater-than 20)
+=>
+(set-strategic-number sn-stone-gatherer-percentage 0)
+)
+
+(defrule
+(current-age == imperial-age)
+(dropsite-min-distance gold greater-than 20)
+=>
+(set-strategic-number sn-gold-gatherer-percentage 0)
+)
+
+(defrule
+(current-age == imperial-age)
 (can-train villager)
 (civilian-population < 150)
 =>
 (train villager)
+)
+(defrule
+(current-age == imperial-age)
+(can-train trebuchet)
+(unit-type-count-total trebuchet < 2)
+=>
+(train trebuchet)
+)
+(defrule
+(current-age == imperial-age)
+(can-train battering-ram-line)
+(unit-type-count-total battering-ram-line < 2)
+=>
+(train battering-ram-line)
 )
 
 ; (defrule
@@ -526,13 +566,6 @@
 ;         (disable-self)
 ; )
 
-(defrule
-        (current-age == imperial-age)
-        (can-build town-center)
-        =>
-        (build town-center)
-        (disable-self)
-)
 
 (defrule
 (can-build-wall 1 palisade-wall)
@@ -564,7 +597,7 @@
         (true)
         =>
         ; (set-strategic-number sn-task-ungrouped-soldiers  1) 
-        (set-strategic-number sn-number-attack-groups 1) 
+        (set-strategic-number sn-number-attack-groups 3) 
         (set-strategic-number sn-minimum-attack-group-size 10)
         (set-strategic-number sn-maximum-attack-group-size 10)
         (set-strategic-number sn-percent-attack-soldiers 100)
@@ -596,11 +629,55 @@
 )
 
 (defrule
+        (can-build castle)
+        (building-type-count-total castle < 2)
+        =>
+        (build castle)
+)
+
+(defrule
         (can-research my-unique-unit-upgrade)
         =>
         (research my-unique-unit-upgrade)
         (disable-self)
 )
+
+(defrule
+        (can-research my-unique-research)
+        =>
+        (research my-unique-research)
+        (disable-self)
+)
+
+
+(defrule
+        (research-completed my-unique-research)
+        (can-build dock)
+        =>
+        (build dock)
+)
+
+(defrule
+        (can-research my-second-unique-research)
+        =>
+        (research my-second-unique-research)
+        (disable-self)
+)
+(defrule
+        (research-completed my-second-unique-research)
+        (can-train militiaman-line)
+        (current-age == imperial-age)
+        =>
+        (train militiaman-line)
+)
+(defrule
+        (research-completed my-second-unique-research)
+        (can-build barracks)
+        (building-type-count-total barracks < 5)
+        =>
+        (build barracks)
+)
+
 
 (defrule
         (unit-type-count-total my-unique-unit-line < 150)
