@@ -616,6 +616,8 @@
 
 ; IMPERIAL AGE
 
+
+
 (defrule
         (can-build fishing-ship)
         (unit-type-count fishing-ship < 15)
@@ -734,6 +736,7 @@
         (set-strategic-number sn-percent-attack-soldiers 100)
         (set-strategic-number sn-scale-minimum-attack-group-size 0)
         (set-strategic-number sn-scale-maximum-attack-group-size 0)
+        (set-strategic-number sn-enable-patrol-attack 1)
         (disable-self)
 )
 
@@ -894,6 +897,19 @@
         (set-strategic-number sn-number-attack-groups 1) 
         (set-strategic-number sn-minimum-attack-group-size 75 )
         (set-strategic-number sn-maximum-attack-group-size 75 )
+        (disable-self)
+)
+
+(defrule
+       
+        (current-age == imperial-age)
+       
+=>
+        (set-strategic-number sn-wood-gatherer-percentage 25)
+        (set-strategic-number sn-food-gatherer-percentage 50)
+        (set-strategic-number sn-gold-gatherer-percentage 20)
+        (set-strategic-number sn-stone-gatherer-percentage 5)
+        (chat-to-allies "Setting castle age stone rush")
         (disable-self)
 )
 
