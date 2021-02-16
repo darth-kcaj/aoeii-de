@@ -18,6 +18,13 @@
 ; Housing
 
 (defrule
+        (can-build house)
+        =>
+        (build house)
+        (disable-self)
+)
+
+(defrule
 (can-build house)
 (housing-headroom < 3)    ;the difference between the current population and supportable population (not the
                           ;amount of population houses support)
@@ -73,6 +80,7 @@
 )
 (defrule
         (can-research ri-gold-mining)
+        (current-age != feudal-age)
         =>
         (research ri-gold-mining)
         (disable-self)
@@ -234,14 +242,15 @@
 (train villager)
 )
 
-
-; inital house
 (defrule
-        (can-build house)
+        (true)
         =>
-        (build house)
+        (set-strategic-number sn-minimum-boar-hunt-group-size 8)
+        (set-strategic-number sn-minimum-boar-lure-group-size 1)
+        (set-strategic-number sn-enable-boar-hunting 2)
         (disable-self)
 )
+
 
 (defrule
 (building-type-count-total house > 0) ; We want to build a house before a mill
@@ -364,7 +373,7 @@
 
 (defrule
         (current-age == feudal-age)
-        (wood-amount greater-than 250)
+        (wood-amount greater-than 350)
 
 =>
         (set-strategic-number sn-wood-gatherer-percentage 30)
@@ -378,7 +387,7 @@
 (defrule
         (current-age == feudal-age)
         (can-train villager)
-        (civilian-population < 23)
+        (civilian-population < 25)
 =>
         (train villager)
 )
@@ -395,7 +404,7 @@
 
 (defrule
         (can-build fishing-ship)
-        (unit-type-count fishing-ship < 5)
+        (unit-type-count fishing-ship < 3)
         (building-type-count-total blacksmith != 0)
         (building-type-count-total market != 0)
         =>
@@ -480,10 +489,10 @@
         (disable-self)
 )
 (defrule
-        (stone-amount greater-than 150)
+        (stone-amount greater-than 300)
         (current-age == castle-age)
         (building-type-count-total castle == 1)
-        (building-type-count-total town-center == 1) ; wait until 2nd town center is built
+        
        
 =>
         (set-strategic-number sn-wood-gatherer-percentage 80)
@@ -830,36 +839,36 @@
 )
 
 (defrule
-        (can-research my-unique-research)
+        (can-research my-second-unique-research)
         (current-age == imperial-age)
         =>
-        (research my-unique-research)
+        (research my-second-unique-research)
         (disable-self)
 )
 
 
 (defrule
-        (research-completed my-unique-research)
+        (research-completed my-second-unique-research)
         (can-build dock)
         =>
         (build dock)
 )
 
 (defrule
-        (can-research my-second-unique-research)
+        (can-research my-unique-research)
         =>
-        (research my-second-unique-research)
+        (research my-unique-research)
         (disable-self)
 )
 (defrule
-        (research-completed my-second-unique-research)
+        (research-completed my-unique-research)
         (can-train militiaman-line)
         (current-age == imperial-age)
         =>
         (train militiaman-line)
 )
 (defrule
-        (research-completed my-second-unique-research)
+        (research-completed my-unique-research)
         (can-build barracks)
         (building-type-count-total barracks < 5)
         =>
@@ -871,7 +880,7 @@
         (unit-type-count-total my-unique-unit-line < 150)
         (can-train my-unique-unit-line)
         (research-completed my-unique-unit-upgrade)
-        (research-completed my-second-unique-research)
+        (research-completed my-unique-research)
         =>
         (train my-unique-unit-line)
 )
