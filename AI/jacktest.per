@@ -363,7 +363,7 @@
 
 =>
         (train spearman-line)
-        (set-strategic-number sn-task-ungrouped-soldiers  1) 
+        
        
 )
 
@@ -373,7 +373,7 @@
 
 (defrule
         (current-age == feudal-age)
-        (wood-amount greater-than 350)
+        (wood-amount greater-than 200)
 
 =>
         (set-strategic-number sn-wood-gatherer-percentage 30)
@@ -489,7 +489,7 @@
         (disable-self)
 )
 (defrule
-        (stone-amount greater-than 300)
+        (stone-amount greater-than 600)
         (current-age == castle-age)
         (building-type-count-total castle == 1)
         
@@ -505,8 +505,8 @@
 (defrule
         (wood-amount greater-than 300)
         (current-age == castle-age)
-        (building-type-count-total town-center > 1) ; wait until 2nd town center is built
-       
+        (building-type-count-total town-center > 2) ; wait until 3rd town center is built
+        (building-type-count-total castle == 1)
 =>
         (set-strategic-number sn-wood-gatherer-percentage 25)
         (set-strategic-number sn-food-gatherer-percentage 50)
@@ -609,9 +609,10 @@
 
 (defrule
         (can-build town-center)
+        (building-type-count-total town-center < 3)
         =>
         (build town-center)
-        (disable-self)
+        
 )
 
 ; IMPERIAL AGE
@@ -714,28 +715,34 @@
 (set-strategic-number sn-percent-civilian-builders 10)
 (set-strategic-number sn-total-number-explorers 1)
 (set-strategic-number sn-number-explore-groups 1)
+(disable-self)
+)
+
+(defrule
+(true)
+=>
+(set-strategic-number sn-maximum-food-drop-distance 6) 
+(set-strategic-number sn-maximum-hunt-drop-distance  6) 
+(set-strategic-number  sn-cap-civilian-builders 5) 
+(set-strategic-number  sn-enable-new-building-system 1) 
+(disable-self)
+)
+
+(defrule
+(true)
+=>
 (set-strategic-number sn-maximum-explore-group-size 1)
 (set-strategic-number sn-minimum-explore-group-size 1)
 (set-strategic-number sn-food-dropsite-distance 5)
 (set-strategic-number sn-wood-dropsite-distance 5)
 (set-strategic-number sn-gold-dropsite-distance 5)
-(set-strategic-number sn-maximum-food-drop-distance 6) 
-(set-strategic-number sn-maximum-hunt-drop-distance  6) 
-(set-strategic-number  sn-cap-civilian-builders 5) 
 (disable-self)
-
 )
 
 (defrule
         (true)
         =>
-        ; (set-strategic-number sn-task-ungrouped-soldiers  1) 
-        (set-strategic-number sn-number-attack-groups 3) 
-        (set-strategic-number sn-minimum-attack-group-size 10)
-        (set-strategic-number sn-maximum-attack-group-size 10)
-        (set-strategic-number sn-percent-attack-soldiers 100)
-        (set-strategic-number sn-scale-minimum-attack-group-size 0)
-        (set-strategic-number sn-scale-maximum-attack-group-size 0)
+        (set-strategic-number sn-disable-attack-groups 1)
         (set-strategic-number sn-enable-patrol-attack 1)
         (disable-self)
 )
@@ -809,12 +816,12 @@
 
 #load-if-defined MALAY-CIV
 
-(defrule
-        (current-age == imperial-age)
-        =>
-        (set-goal infantry-upgrades-flag 1)
-        (disable-self)
-)
+; (defrule
+;         (current-age == imperial-age)
+;         =>
+;         (set-goal infantry-upgrades-flag 1)
+;         (disable-self)
+; )
 
 
 
@@ -867,6 +874,8 @@
         (research-completed my-unique-research)
         (can-train militiaman-line)
         (current-age == imperial-age)
+        (food-amount greater-than 800)
+
         =>
         (train militiaman-line)
 )
@@ -894,7 +903,7 @@
         =>
         (set-goal TSA-attack-flag 1)
         (set-strategic-number sn-task-ungrouped-soldiers  1) 
-        (set-strategic-number sn-number-attack-groups 1) 
+        (set-goal infantry-upgrades-flag 1)
         (set-strategic-number sn-minimum-attack-group-size 75 )
         (set-strategic-number sn-maximum-attack-group-size 75 )
         (disable-self)
