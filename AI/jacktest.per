@@ -14,6 +14,10 @@
 (defconst infantry-upgrades-flag 1) 
 (defconst tower-upgrades-flag 2) 
 (defconst TSA-attack-flag 3) 
+(defconst archery-upgrades-flag 4)
+(defconst civ-pop-count 4)
+
+
 
 ; Housing
 
@@ -32,6 +36,7 @@
 =>
 (build house)
 )
+
 
 
 
@@ -65,6 +70,7 @@
 (defrule
       
         (can-research ri-horse-collar)
+        (research-completed ri-bow-saw)
         =>
         (research ri-horse-collar)
         (disable-self)
@@ -81,6 +87,7 @@
 (defrule
         (can-research ri-gold-mining)
         (current-age != feudal-age)
+        (research-completed ri-bow-saw)
         =>
         (research ri-gold-mining)
         (disable-self)
@@ -88,12 +95,14 @@
 (defrule
         (can-research ri-stone-mining)
         (current-age != feudal-age)
+        (research-completed ri-bow-saw)
         =>
         (research ri-stone-mining)
         (disable-self)
 )
 (defrule
         (can-research ri-stone-shaft-mining)
+        (current-age != castle-age)
         =>
         (research ri-stone-shaft-mining)
         (disable-self)
@@ -107,7 +116,7 @@
 )
 (defrule
         (can-research ri-loom)
-        (current-age != dark-age)
+       
         =>
         (research ri-loom)
         (disable-self)
@@ -231,16 +240,107 @@
         (research ri-champion)
         (disable-self)
 )
+(defrule
+        (goal infantry-upgrades-flag 1)
+        (can-research ri-pikeman)
+        =>
+        (research ri-pikeman)
+        (disable-self)
+)
+(defrule
+        (goal infantry-upgrades-flag 1)
+        (can-research ri-halberdier)
+        =>
+        (research ri-halberdier)
+        (disable-self)
+)
+(defrule
+        (goal archery-upgrades-flag 1)
+        (can-research ri-thumb-ring)
+        =>
+        (research ri-thumb-ring)
+        (disable-self)
+)
+(defrule
+        (goal archery-upgrades-flag 1)
+        (can-research ri-fletching)
+        =>
+        (research ri-fletching)
+        (disable-self)
+)
+(defrule
+        (goal archery-upgrades-flag 1)
+        (can-research ri-bodkin-arrow)
+        =>
+        (research ri-bodkin-arrow)
+        (disable-self)
+)
+(defrule
+        (goal archery-upgrades-flag 1)
+        (can-research ri-padded-archer-armor)
+        =>
+        (research ri-padded-archer-armor)
+        (disable-self)
+)
+(defrule
+        (goal archery-upgrades-flag 1)
+        (can-research ri-leather-archer-armor)
+        =>
+        (research ri-leather-archer-armor)
+        (disable-self)
+)
+(defrule
+        (goal archery-upgrades-flag 1)
+        (can-research ri-ring-archer-armor)
+        =>
+        (research ri-ring-archer-armor)
+        (disable-self)
+)
+(defrule
+        (goal archery-upgrades-flag 1)
+        (can-research ri-bracer)
+        =>
+        (research ri-bracer)
+        (disable-self)
+)
+(defrule
+        (goal archery-upgrades-flag 1)
+        (can-research ri-crossbow)
+        =>
+        (research ri-crossbow)
+        (disable-self)
+)
+(defrule
+        (goal archery-upgrades-flag 1)
+        (can-research ri-ballistics)
+        =>
+        (research ri-ballistics)
+        (disable-self)
+)
+(defrule
+        (goal archery-upgrades-flag 1)
+        (can-research ri-chemistry)
+        =>
+        (research ri-chemistry)
+        (disable-self)
+)
 
 ;DARK AGE......
 
 (defrule
 (current-age == dark-age)
 (can-train villager)
-(civilian-population < 12)
+(civilian-population < 15)
 =>
 (train villager)
 )
+
+(defrule
+        (true)
+        =>
+        (set-goal civ-pop-count civilian-population)
+)
+
 
 (defrule
         (true)
@@ -321,12 +421,25 @@
 )
 
 
+(defrule
+        (research-available feudal-age)
+        (current-age == dark-age)
+       
+=>
+        (set-strategic-number sn-wood-gatherer-percentage 0)
+        (set-strategic-number sn-food-gatherer-percentage 100)
+        (set-strategic-number sn-gold-gatherer-percentage 0)
+        (set-strategic-number sn-stone-gatherer-percentage 0)
+        (chat-to-allies "Prioritizing food ")
+)
+
+
 ; FEUDAL AGE
 
 (defrule
 (current-age == feudal-age)
 (building-type-count-total lumber-camp > 0) ; We want a lumber camp before farms
-(unit-type-count-total villager > 14)
+
 (building-type-count-total farm < 15)
 (idle-farm-count == 0) ; Only build farms if there are less than 4 idle farms
 =>
@@ -373,7 +486,9 @@
 
 (defrule
         (current-age == feudal-age)
-        (wood-amount greater-than 200)
+        (research-available castle-age)
+        (building-type-count-total blacksmith != 0)
+        (building-type-count-total market != 0)
 
 =>
         (set-strategic-number sn-wood-gatherer-percentage 30)
@@ -394,7 +509,8 @@
 (defrule
         (current-age != dark-age)
         (can-build dock)
-        ; (goal make-dock-flag 1)
+        (building-type-count-total blacksmith != 0)
+        (building-type-count-total market != 0)
                
 =>
         (build dock)
@@ -427,6 +543,14 @@
 (building-type-count-total market == 0)
 =>
 (build market)
+)
+
+(defrule
+(current-age == feudal-age)
+(can-build stable)
+(building-type-count-total stable == 0)
+=>
+(build stable)
 )
 
 (defrule
@@ -491,7 +615,7 @@
 (defrule
         (stone-amount greater-than 600)
         (current-age == castle-age)
-        (building-type-count-total castle == 1)
+        (building-type-count-total castle != 0)
         
        
 =>
@@ -506,7 +630,7 @@
         (wood-amount greater-than 300)
         (current-age == castle-age)
         (building-type-count-total town-center > 2) ; wait until 3rd town center is built
-        (building-type-count-total castle == 1)
+        (building-type-count-total castle != 0)
 =>
         (set-strategic-number sn-wood-gatherer-percentage 25)
         (set-strategic-number sn-food-gatherer-percentage 50)
@@ -529,7 +653,7 @@
 
 (defrule
         (building-type-count-total castle != 0)
-        (building-type-count-total town-center > 1) ; wait until 2nd town center is built
+        (building-type-count-total town-center > 2) ; wait until 2nd town center is built
         (building-type-count-total watch-tower-line < 5)
         (can-build watch-tower-line)
         =>
@@ -550,6 +674,7 @@
 (defrule
 (current-age == castle-age)
 (building-type-count-total farm < 30)
+(building-type-count-total mining-camp > 1) ; to ensure stone rush has fired
 (can-build farm)
 (idle-farm-count == 0) ; Only build farms if there are less than 4 idle farms
 =>
@@ -614,6 +739,21 @@
         (build town-center)
         
 )
+(defrule
+        (can-build monastery)
+        =>
+        (build monastery)
+        (disable-self)        
+)
+(defrule
+        (can-train monk)
+        (unit-type-count monk < 1)
+        =>
+        (train monk)
+             
+)
+
+
 
 ; IMPERIAL AGE
 
@@ -662,10 +802,11 @@
 (defrule
 (current-age == imperial-age)
 (can-train villager)
-(civilian-population < 150)
+(civilian-population < 100)
 =>
 (train villager)
 )
+
 (defrule
 (current-age == imperial-age)
 (can-train trebuchet)
@@ -727,6 +868,23 @@
 (set-strategic-number  sn-enable-new-building-system 1) 
 (disable-self)
 )
+
+#load-if-defined DEATH-MATCH
+
+(defrule
+(true)
+=>
+(set-strategic-number  sn-cap-civilian-builders 30) 
+(disable-self)
+)
+(defrule
+        (can-build house)
+       
+        (building-type-count-total house < 60)
+        =>
+        (build house)
+)
+#end-if
 
 (defrule
 (true)
@@ -811,6 +969,25 @@
 
 
 ; =======================================
+; Market STRATS
+; =======================================
+
+(defrule
+(wood-amount greater-than 2000)
+(can-sell-commodity wood) 
+=>
+(sell-commodity wood)
+)
+
+(defrule
+(gold-amount greater-than 3000)
+(food-amount less-than 500)
+(can-buy-commodity food) 
+=>
+(buy-commodity food)
+)
+
+; =======================================
 ; CHEESE STRATS
 ; =======================================
 
@@ -860,6 +1037,7 @@
 (defrule
         (research-completed my-second-unique-research)
         (can-build dock)
+        (building-type-count-total barracks > 10)
         =>
         (build dock)
 )
@@ -873,16 +1051,29 @@
 (defrule
         (research-completed my-unique-research)
         (can-train militiaman-line)
+        
         (current-age == imperial-age)
-        (food-amount greater-than 800)
+        
 
         =>
         (train militiaman-line)
 )
 (defrule
+        
+        (can-train spearman-line)
+        (military-population > 50)
+        (current-age == imperial-age)
+        (food-amount greater-than 1200)
+        
+       
+
+        =>
+        (train spearman-line)
+)
+(defrule
         (research-completed my-unique-research)
         (can-build barracks)
-        (building-type-count-total barracks < 5)
+        (building-type-count-total barracks < 15)
         =>
         (build barracks)
 )
@@ -902,11 +1093,23 @@
         (military-population > 100)
         =>
         (set-goal TSA-attack-flag 1)
-        (set-strategic-number sn-task-ungrouped-soldiers  1) 
+        ; (set-strategic-number sn-task-ungrouped-soldiers  1) 
         (set-goal infantry-upgrades-flag 1)
-        (set-strategic-number sn-minimum-attack-group-size 75 )
-        (set-strategic-number sn-maximum-attack-group-size 75 )
-        (disable-self)
+        ; (set-strategic-number sn-minimum-attack-group-size 75 )
+        ; (set-strategic-number sn-maximum-attack-group-size 75 )
+        
+)
+
+(defrule
+        (current-age == imperial-age)
+        (military-population < 50)
+        =>
+        (set-goal TSA-attack-flag 0)
+        ; (set-strategic-number sn-task-ungrouped-soldiers  1) 
+        (set-strategic-number sn-maximum-town-size 24)
+        ; (set-strategic-number sn-minimum-attack-group-size 75 )
+        ; (set-strategic-number sn-maximum-attack-group-size 75 )
+        
 )
 
 (defrule
@@ -922,5 +1125,81 @@
         (disable-self)
 )
 
+
+#end-if
+
+
+#load-if-defined PERSIAN-CIV
+
+
+(defrule
+        (can-research my-second-unique-research)
+        =>
+        (research my-second-unique-research)
+        (disable-self)
+)
+
+
+
+
+(defrule
+        (research-completed my-second-unique-research)
+        (building-type-count-total archery-range < 15)
+        (can-build archery-range)
+
+        =>
+        (build archery-range)
+)
+
+(defrule
+        (building-type-count-total town-center < 4)
+        (can-build town-center)
+
+        =>
+        (build town-center)
+)
+
+(defrule
+       
+        (building-type-count-total university == 0)
+        (can-build university)
+
+        =>
+        (build university)
+)
+
+
+(defrule
+        (research-completed my-second-unique-research)
+        (can-train archer-line)
+        (military-population g:< civ-pop-count)
+        =>
+        (train archer-line)
+)
+(defrule
+        (research-completed my-second-unique-research)
+        (can-train skirmisher-line)
+       
+        (current-age == imperial-age)
+        (military-population g:< civ-pop-count)
+        =>
+        (train skirmisher-line)
+)
+
+
+(defrule
+        
+        (military-population > 100)
+        =>
+        (set-goal TSA-attack-flag 1)
+        (set-goal archery-upgrades-flag 1)        
+)
+
+(defrule
+        (military-population < 50)
+        =>
+        (set-goal TSA-attack-flag 0)      
+        (set-strategic-number sn-maximum-town-size 24)        
+)
 
 #end-if
